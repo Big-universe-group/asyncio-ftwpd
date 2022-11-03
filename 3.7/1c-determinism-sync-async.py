@@ -3,6 +3,11 @@ from time import sleep
 import asyncio
 
 
+def common_print():
+    print('--------------end--------------')
+    print()
+
+
 def task(pid):
     """Synchronous non-deterministic task."""
     sleep(random.randint(0, 2) * 0.001)
@@ -16,17 +21,21 @@ async def task_coro(pid):
 
 
 def synchronous():
+    # 同步
     for i in range(1, 10):
         task(i)
 
 
 async def asynchronous():
+    # 异步
     tasks = [task_coro(i) for i in range(1, 10)]
     await asyncio.gather(*tasks)
 
 
 print('Synchronous:')
 synchronous()
+
+common_print()
 
 print('Asynchronous:')
 asyncio.run(asynchronous())

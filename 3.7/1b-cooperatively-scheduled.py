@@ -28,6 +28,8 @@ async def gr3():
     print("Done!")
 
 
+# 注意一点: 协程不是并行, 其是由程序控制的并发, 所以tasks的载入是由顺序的(直到碰到IO才退出)
+# 我们举个例子: 若所有的tasks中都没有IO事件(asyncio.sleep(0)), 则其执行顺序和同步一致, 见alternatives/1-xx
 async def main():
     tasks = [gr1(), gr2(), gr3()]
     await asyncio.gather(*tasks)

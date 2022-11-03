@@ -31,12 +31,18 @@ async def fetch_ip(service):
 
 async def main():
     futures = [fetch_ip(service) for service in SERVICES]
+    # 3.8之后asyncio.wait不会自动将coro对象变为Task对象, 需要使用create_task, 否则告警
+    # https://blog.csdn.net/m0_69082030/article/details/124327891
+    futures = [asyncio.create_task(future) for future in futures]
     done, pending = await asyncio.wait(
         futures, return_when=FIRST_COMPLETED)
 
     print(done.pop().result())
 
 
-ioloop = asyncio.get_event_loop()
-ioloop.run_until_complete(main())
-ioloop.close()
+# 3.5方式, 在3.7运行会报错
+#  ioloop = asyncio.get_event_loop()
+#  ioloop.run_until_complete(main())
+#  ioloop.close()
+# 3.7方式
+asyncio.run(main())

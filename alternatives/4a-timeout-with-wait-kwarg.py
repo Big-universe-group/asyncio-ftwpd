@@ -1,10 +1,14 @@
+"""
+test: 设置异步任务超时时间
+"""
 import time
 import random
 import asyncio
-import aiohttp
 import argparse
 from collections import namedtuple
 from concurrent.futures import FIRST_COMPLETED
+import aiohttp
+
 
 Service = namedtuple('Service', ('name', 'url', 'ip_attr'))
 

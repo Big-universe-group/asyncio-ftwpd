@@ -1,3 +1,6 @@
+"""
+test: 相比2b, 这里对pending做了额外的处理
+"""
 from collections import namedtuple
 import time
 import asyncio
@@ -35,6 +38,7 @@ async def asynchronous():
         futures, return_when=FIRST_COMPLETED)
 
     print(done.pop().result())
+    print('===========================')
 
     for future in pending:
         future.cancel()

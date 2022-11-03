@@ -32,6 +32,7 @@ async def fetch_ip(service):
             service.name, ip, time.time() - start))
 
 
+# 相比3b, 不再获取done的结果
 async def asynchronous():
     futures = [fetch_ip(service) for service in SERVICES]
     await asyncio.wait(futures)  # intentionally ignore results

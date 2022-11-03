@@ -1,3 +1,6 @@
+"""
+test: 测试async异步异常情况的输出, 这里实际上在内部捕获了异常, 仍然返回正常的信息
+"""
 from collections import namedtuple
 import time
 import asyncio
@@ -36,6 +39,7 @@ async def asynchronous():
     futures = [fetch_ip(service) for service in SERVICES]
     done, _ = await asyncio.wait(futures)
 
+    print('======' * 5)
     for future in done:
         print(future.result())
 

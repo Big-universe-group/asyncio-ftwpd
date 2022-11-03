@@ -7,6 +7,11 @@ URL = 'https://api.github.com/events'
 MAX_CLIENTS = 3
 
 
+def common_print():
+    print('--------------end--------------')
+    print()
+
+
 def fetch_sync(pid):
     print('Fetch sync process {} started'.format(pid))
     start = time.time()
@@ -57,5 +62,8 @@ async def asynchronous():
 print('Synchronous:')
 synchronous()
 
+common_print()
+
+# 整个流程同alter/1d-XX一致, 但是控制逻辑未使用loop
 print('Asynchronous:')
 asyncio.run(asynchronous())

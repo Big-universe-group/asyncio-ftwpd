@@ -34,6 +34,7 @@ async def fetch_ip(service):
 
 async def main():
     futures = [fetch_ip(service) for service in SERVICES]
+    futures = [asyncio.create_task(future) for future in futures]
     done, _ = await asyncio.wait(futures)
 
     for future in done:

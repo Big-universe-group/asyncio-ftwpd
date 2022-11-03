@@ -16,10 +16,16 @@ def bar():
     print('Implicit context switch back to bar')
 
 
+# 老版本: 使用gen.coroutine装饰器和yield来达到协程效果
+# tornado6: 直接使用async和await修饰符
 @gen.coroutine
 def main():
     yield [foo(), bar()]
 
 
+# 1. iollop
+# ioloop主事件循环: 用于非阻塞套接字的I/O事件循环
+# 注意, 从tornado6开始, ioloop是一个包装 asyncio 事件循环
 ioloop = ioloop.IOLoop.current()
+# 2. 运行
 ioloop.run_sync(main)

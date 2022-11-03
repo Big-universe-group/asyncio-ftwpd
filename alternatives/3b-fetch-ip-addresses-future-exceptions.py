@@ -1,8 +1,14 @@
+"""
+test: 测试async异步异常情况, 异常会在调用result时触发
+Concurrency和Parallelism: 并发和并行
+协程和线程: 协程由开发者来决定如何进行任务的切换, 数据共享也比较容易, 至少不会出现并行
+"""
+
 from collections import namedtuple
 import time
 import asyncio
-import aiohttp
 import traceback
+import aiohttp
 
 Service = namedtuple('Service', ('name', 'url', 'ip_attr'))
 
@@ -28,7 +34,6 @@ async def fetch_ip(service):
         return '{} is unresponsive'.format(service.name)
 
     ip = json_response[service.ip_attr]
-
     return '{} finished with result: {}, took: {:.2f} seconds'.format(
         service.name, ip, time.time() - start)
 
@@ -37,6 +42,8 @@ async def asynchronous():
     futures = [fetch_ip(service) for service in SERVICES]
     done, _ = await asyncio.wait(futures)
 
+    print('======' * 5)
+    # 注意, 在进行future.result()打印的时候会把coroutine中的异常打印出来
     for future in done:
         try:
             print(future.result())
