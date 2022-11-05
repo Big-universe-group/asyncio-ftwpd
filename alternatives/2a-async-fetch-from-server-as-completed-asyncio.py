@@ -44,12 +44,15 @@ async def fetch_sleep_async(pid):
     return dt
 
 
-# 1. 所有async修饰的函数都是coro协程对象
-# 2. as_completed接收tasks列表并返回一个可迭代的coro生成器
-# 3. 注意, 从输出(多执行几次)来看, await阻塞之后异步调用顺序不固定
 async def asynchronous():
+    """
+        1. 所有async修饰的函数都是coro协程对象
+        2. as_completed接收tasks列表并返回一个可迭代的coro生成器
+        3. 注意, 从输出(多执行几次)来看, await阻塞之后异步调用顺序不固定
+    """
     start = time.time()
     futures = [fetch_async(i) for i in range(1, MAX_CLIENTS + 1)]
+    # as_completed用法很重要, 特别是一个函数中有多个await存在时(future)
     for i, future in enumerate(asyncio.as_completed(futures)):
         print('<<' * (i + 1) + f' Process {i + 1}')
         result = await future

@@ -12,7 +12,22 @@ MAX_CLIENTS = 3
 
 
 def fetch_sync(pid):
+    """ 一旦使用异步, 则系统的每一层都必须是异步, 当然, 若有有多个IO阻塞, 你可以在某些IO地方以同步的方式运行,
+        只要能承受性能就行, 具体见asynchronous_block函数
+    """
     print('Fetch sync process {} started'.format(pid))
+    start = time.time()
+    with urllib.request.urlopen(URL) as response:
+        datetime = response.getheader('Date')
+
+    print('Process {}: {}, took: {:.2f} seconds'.format(
+        pid, datetime, time.time() - start))
+
+    return datetime
+
+
+async def fetch_async_block(pid):
+    print('Fetch async block process {} started'.format(pid))
     start = time.time()
     with urllib.request.urlopen(URL) as response:
         datetime = response.getheader('Date')
@@ -55,12 +70,19 @@ def synchronous():
     print("Process took: {:.2f} seconds".format(time.time() - start))
 
 
+async def asynchronous_block():
+    """ 即使这里使用了标准的async/await语法, 但是fetch_async_block中仍然使用同步阻塞语法, 所以最终耗时很长 """
+    start = time.time()
+    tasks = [asyncio.ensure_future(fetch_async_block(i)) for i in range(1, MAX_CLIENTS + 1)]
+    await asyncio.wait(tasks)
+    print("Process took: {:.2f} seconds".format(time.time() - start))
+
+
 async def asynchronous():
     start = time.time()
     # 注意, 这里是fetch_async而非fetch_sync
-    tasks = [asyncio.ensure_future(
-        fetch_async(i)) for i in range(1, MAX_CLIENTS + 1)]
-    # 关于asyncio.wait见1c中说明
+    tasks = [asyncio.ensure_future(fetch_async(i)) for i in range(1, MAX_CLIENTS + 1)]
+    # 关于asyncio.wait见1c中说明, 另外还可以使用gather来进行集合任务推送
     print('>>>wait')
     await asyncio.wait(tasks)
     print("Process took: {:.2f} seconds".format(time.time() - start))
@@ -73,5 +95,12 @@ print('--------------------->end\n\n')
 print('Asynchronous:')
 ioloop = asyncio.get_event_loop()
 ioloop.run_until_complete(asynchronous())
+ioloop.close()
+print('--------------------->end\n\n')
+
+print('Asynchronous Block:')
+asyncio.set_event_loop(asyncio.new_event_loop())  # 创建新的loop(3.5版本问题)
+ioloop = asyncio.get_event_loop()
+ioloop.run_until_complete(asynchronous_block())
 ioloop.close()
 print('--------------------->end')

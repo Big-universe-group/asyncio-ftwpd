@@ -36,7 +36,7 @@ async def gr3():
 
 ioloop = asyncio.get_event_loop()
 # 1. create_task: 将coro协程封装为一个Task以便调度
-# 2. 从python3.7开始统一使用asyncio.create_task来代替loop.create_task和asyncio.ensure_future
+# 2. 从python3.7+开始统一使用asyncio.create_task来代替loop.create_task和asyncio.ensure_future
 tasks = [
     ioloop.create_task(gr1()),
     ioloop.create_task(gr2()),

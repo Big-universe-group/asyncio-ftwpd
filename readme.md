@@ -16,3 +16,8 @@ The examples in the root directory will only work on Python 3.7, the [alternativ
 - `python <NAME_OF_SAMPLE>.py`
 
 Enjoy!
+
+
+## 额外说明
+
+Can't install 3.7 virtual environment at M1, so use 3.9 instead of 3.7.
